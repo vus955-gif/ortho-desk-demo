@@ -1,0 +1,88 @@
+{
+  "_opis": "Fikcyjni klienci testowi i ich zamówienia. Adresy w domenie example.com (zarezerwowanej do przykładów, RFC 2606). Daty względem 10.10.2026.",
+  "klienci": [
+    { "id": "K-001", "email": "anna.kowalska@example.com", "nazwa": "Anna Kowalska", "jezyk": "pl" },
+    { "id": "K-002", "email": "marek.nowak@example.com", "nazwa": "Marek Nowak", "jezyk": "pl" },
+    { "id": "K-003", "email": "ewa.wisniewska@example.com", "nazwa": "Ewa Wiśniewska", "jezyk": "pl" },
+    { "id": "K-004", "email": "tomasz.zielinski@example.com", "nazwa": "Tomasz Zieliński", "jezyk": "pl" },
+    { "id": "K-005", "email": "katarzyna.lewandowska@example.com", "nazwa": "Katarzyna Lewandowska", "jezyk": "pl" },
+    { "id": "K-006", "email": "piotr.wojcik@example.com", "nazwa": "Piotr Wójcik", "jezyk": "pl" },
+    { "id": "K-007", "email": "john.miller@example.com", "nazwa": "John Miller", "jezyk": "en" },
+    { "id": "K-008", "email": "sarah.thompson@example.com", "nazwa": "Sarah Thompson", "jezyk": "en" },
+    { "id": "K-009", "email": "jan.kaminski@example.com", "nazwa": "Jan Kamiński", "jezyk": "pl" },
+    { "id": "K-010", "email": "zofia.dabrowska@example.com", "nazwa": "Zofia Dąbrowska", "jezyk": "pl" }
+  ],
+  "zamowienia": [
+    {
+      "nr": "ZAM-20417", "klient_id": "K-001",
+      "produkty": [{ "kod": "KX-210", "nazwa": "Orteza stawu kolanowego KX-210 Flex", "rozmiar": "M", "ilosc": 1 }],
+      "status": "wysłane", "data_zamowienia": "2026-10-06", "data_wysylki": "2026-10-08",
+      "przewoznik": "kurier", "nr_przesylki": "TRK-55120417", "przewidywana_dostawa": "2026-10-12"
+    },
+    {
+      "nr": "ZAM-20502", "klient_id": "K-002",
+      "produkty": [{ "kod": "NX-110", "nazwa": "Stabilizator nadgarstka NX-110", "rozmiar": "L, prawa ręka", "ilosc": 1 }],
+      "status": "w realizacji", "data_zamowienia": "2026-10-08", "data_wysylki": null,
+      "przewoznik": null, "nr_przesylki": null, "przewidywana_dostawa": "2026-10-14"
+    },
+    {
+      "nr": "ZAM-20588", "klient_id": "K-002",
+      "produkty": [{ "kod": "LX-500", "nazwa": "Pas lędźwiowy LX-500", "rozmiar": "L", "ilosc": 1 }],
+      "status": "dostarczone", "data_zamowienia": "2026-09-15", "data_wysylki": "2026-09-16",
+      "przewoznik": "kurier", "nr_przesylki": "TRK-55120588", "przewidywana_dostawa": "2026-09-18", "data_dostawy": "2026-09-18"
+    },
+    {
+      "nr": "ZAM-20633", "klient_id": "K-003",
+      "produkty": [{ "kod": "SX-150", "nazwa": "Orteza stawu skokowego SX-150", "rozmiar": "S", "ilosc": 1 }],
+      "status": "wysłane", "data_zamowienia": "2026-10-07", "data_wysylki": "2026-10-09",
+      "przewoznik": "paczkomat", "nr_przesylki": "TRK-55120633", "przewidywana_dostawa": "2026-10-11"
+    },
+    {
+      "nr": "ZAM-20711", "klient_id": "K-005",
+      "produkty": [{ "kod": "KX-300", "nazwa": "Orteza stawu kolanowego KX-300 Carbon", "rozmiar": "L", "ilosc": 1 }],
+      "status": "wstrzymane", "powod_wstrzymania": "oczekuje na zaksięgowanie płatności",
+      "data_zamowienia": "2026-10-05", "data_wysylki": null,
+      "przewoznik": null, "nr_przesylki": null, "przewidywana_dostawa": null
+    },
+    {
+      "nr": "ZAM-20750", "klient_id": "K-006",
+      "produkty": [
+        { "kod": "CX-40", "nazwa": "Kołnierz ortopedyczny CX-40 Soft", "rozmiar": "M", "ilosc": 1 },
+        { "kod": "EX-120", "nazwa": "Orteza stawu łokciowego EX-120", "rozmiar": "M", "ilosc": 1 }
+      ],
+      "status": "dostarczone", "data_zamowienia": "2026-09-17", "data_wysylki": "2026-09-18",
+      "przewoznik": "kurier", "nr_przesylki": "TRK-55120750", "przewidywana_dostawa": "2026-09-20", "data_dostawy": "2026-09-20"
+    },
+    {
+      "nr": "ZAM-20802", "klient_id": "K-007",
+      "produkty": [{ "kod": "KX-210", "nazwa": "Orteza stawu kolanowego KX-210 Flex", "rozmiar": "L", "ilosc": 1 }],
+      "status": "wysłane", "data_zamowienia": "2026-10-05", "data_wysylki": "2026-10-07",
+      "przewoznik": "kurier", "nr_przesylki": "TRK-55120802", "przewidywana_dostawa": "2026-10-13"
+    },
+    {
+      "nr": "ZAM-20815", "klient_id": "K-008",
+      "produkty": [{ "kod": "NX-110", "nazwa": "Stabilizator nadgarstka NX-110", "rozmiar": "S, lewa ręka", "ilosc": 1 }],
+      "status": "w realizacji", "data_zamowienia": "2026-10-08", "data_wysylki": null,
+      "przewoznik": null, "nr_przesylki": null, "przewidywana_dostawa": "2026-10-15"
+    },
+    {
+      "nr": "ZAM-20840", "klient_id": "K-008",
+      "produkty": [{ "kod": "SX-150", "nazwa": "Orteza stawu skokowego SX-150", "rozmiar": "M", "ilosc": 1 }],
+      "status": "przyjęte", "data_zamowienia": "2026-10-09", "data_wysylki": null,
+      "przewoznik": null, "nr_przesylki": null, "przewidywana_dostawa": "2026-10-16"
+    },
+    {
+      "nr": "ZAM-20866", "klient_id": "K-009",
+      "produkty": [{ "kod": "BX-70", "nazwa": "Stabilizator barku BX-70", "rozmiar": "XL", "ilosc": 1 }],
+      "status": "wstrzymane", "powod_wstrzymania": "brak rozmiaru XL w magazynie, dostawa do magazynu planowana na 2026-10-20",
+      "data_zamowienia": "2026-10-03", "data_wysylki": null,
+      "przewoznik": null, "nr_przesylki": null, "przewidywana_dostawa": "2026-10-23"
+    },
+    {
+      "nr": "ZAM-20901", "klient_id": "K-010",
+      "produkty": [{ "kod": "WK-10", "nazwa": "Wkładki ortopedyczne WK-10 Active", "rozmiar": "39", "ilosc": 2 }],
+      "status": "dostarczone", "data_zamowienia": "2026-09-25", "data_wysylki": "2026-09-26",
+      "przewoznik": "paczkomat", "nr_przesylki": "TRK-55120901", "przewidywana_dostawa": "2026-09-28", "data_dostawy": "2026-09-28"
+    }
+  ]
+}

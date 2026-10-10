@@ -1,0 +1,14 @@
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+.vercel/
+
+# secrets: the API key lives only in .env.local (local) and in Vercel env vars (prod)
+.env*
+!.env.example
+
+# local documents and tooling
+*.pdf
+.claude/

@@ -1,0 +1,209 @@
+{
+  "_opis": "Fikcyjny katalog produktów do demo Ortho Desk. Kody i nazwy są wymyślone.",
+  "produkty": [
+    {
+      "kod": "KX-210",
+      "nazwa": "Orteza stawu kolanowego KX-210 Flex",
+      "typ": "kolano",
+      "aliasy": [
+        "kx-210",
+        "kx 210",
+        "kx210",
+        "flex",
+        "knee brace flex"
+      ],
+      "slowa_typu": [
+        "kolano",
+        "kolana",
+        "kolanowa",
+        "kolanowej",
+        "kolanowego",
+        "kolanowy",
+        "kolanowe",
+        "kolanową",
+        "knee"
+      ]
+    },
+    {
+      "kod": "KX-300",
+      "nazwa": "Orteza stawu kolanowego KX-300 Carbon",
+      "typ": "kolano",
+      "aliasy": [
+        "kx-300",
+        "kx 300",
+        "kx300",
+        "carbon",
+        "karbon",
+        "karbonowa",
+        "karbonową",
+        "włókno węglowe",
+        "włókna węglowego",
+        "carbon fiber",
+        "carbon fibre"
+      ],
+      "slowa_typu": [
+        "kolano",
+        "kolana",
+        "kolanowa",
+        "kolanowej",
+        "kolanowego",
+        "kolanowy",
+        "kolanowe",
+        "kolanową",
+        "knee"
+      ]
+    },
+    {
+      "kod": "NX-110",
+      "nazwa": "Stabilizator nadgarstka NX-110",
+      "typ": "nadgarstek",
+      "aliasy": [
+        "nx-110",
+        "nx 110",
+        "nx110"
+      ],
+      "slowa_typu": [
+        "nadgarstek",
+        "nadgarstka",
+        "nadgarstku",
+        "wrist"
+      ]
+    },
+    {
+      "kod": "SX-150",
+      "nazwa": "Orteza stawu skokowego SX-150",
+      "typ": "staw_skokowy",
+      "aliasy": [
+        "sx-150",
+        "sx 150",
+        "sx150"
+      ],
+      "slowa_typu": [
+        "skokowy",
+        "skokowego",
+        "skokowa",
+        "kostka",
+        "kostki",
+        "kostkę",
+        "kostce",
+        "ankle"
+      ]
+    },
+    {
+      "kod": "CX-40",
+      "nazwa": "Kołnierz ortopedyczny CX-40 Soft",
+      "typ": "szyja",
+      "aliasy": [
+        "cx-40",
+        "cx 40",
+        "cx40",
+        "cx-40 soft",
+        "kołnierz soft"
+      ],
+      "slowa_typu": [
+        "kołnierz",
+        "kołnierza",
+        "kołnierzem",
+        "kołnierzu",
+        "szyja",
+        "szyi",
+        "collar",
+        "neck"
+      ]
+    },
+    {
+      "kod": "LX-500",
+      "nazwa": "Pas lędźwiowy LX-500",
+      "typ": "kregoslup",
+      "aliasy": [
+        "lx-500",
+        "lx 500",
+        "lx500"
+      ],
+      "slowa_typu": [
+        "pas lędźwiowy",
+        "pasa lędźwiowego",
+        "lędźwiowy",
+        "lędźwiowego",
+        "lędźwiowym",
+        "kręgosłup",
+        "kręgosłupa",
+        "lumbar",
+        "back belt",
+        "back brace"
+      ]
+    },
+    {
+      "kod": "EX-120",
+      "nazwa": "Orteza stawu łokciowego EX-120",
+      "typ": "lokiec",
+      "aliasy": [
+        "ex-120",
+        "ex 120",
+        "ex120"
+      ],
+      "slowa_typu": [
+        "łokieć",
+        "łokcia",
+        "łokciowa",
+        "łokciowego",
+        "łokciowej",
+        "elbow"
+      ]
+    },
+    {
+      "kod": "TX-20",
+      "nazwa": "Orteza kciuka TX-20",
+      "typ": "kciuk",
+      "aliasy": [
+        "tx-20",
+        "tx 20",
+        "tx20"
+      ],
+      "slowa_typu": [
+        "kciuk",
+        "kciuka",
+        "kciuku",
+        "thumb"
+      ]
+    },
+    {
+      "kod": "BX-70",
+      "nazwa": "Stabilizator barku BX-70",
+      "typ": "bark",
+      "aliasy": [
+        "bx-70",
+        "bx 70",
+        "bx70"
+      ],
+      "slowa_typu": [
+        "bark",
+        "barku",
+        "barkowy",
+        "ramię",
+        "ramienia",
+        "shoulder"
+      ]
+    },
+    {
+      "kod": "WK-10",
+      "nazwa": "Wkładki ortopedyczne WK-10 Active",
+      "typ": "stopa",
+      "aliasy": [
+        "wk-10",
+        "wk 10",
+        "wk10",
+        "wk-10 active",
+        "wkładki active"
+      ],
+      "slowa_typu": [
+        "wkładki",
+        "wkładka",
+        "wkładek",
+        "wkładkach",
+        "insoles",
+        "insole"
+      ]
+    }
+  ]
+}

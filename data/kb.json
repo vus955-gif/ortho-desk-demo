@@ -1,0 +1,247 @@
+{
+  "_opis": "Fikcyjna baza wiedzy demo Ortho Desk. Treści są wymyślone na potrzeby pokazu i nie są poradą medyczną ani prawną. Każdy artykuł ma wersję i status; wyszukiwanie korzysta wyłącznie z artykułów zatwierdzonych.",
+  "artykuly": [
+    {
+      "id": "reg-reklamacje", "wersja": "2.1", "status": "zatwierdzony", "obowiazuje_od": "2026-01-15",
+      "typ": "regulamin", "produkt": null, "temat": "reklamacje",
+      "tytul": "Regulamin reklamacji",
+      "slowa_kluczowe": ["reklamacja", "reklamacji", "reklamację", "reklamować", "zareklamować", "wada", "wadliwy", "uszkodzony", "uszkodzenie", "zepsuty", "pękł", "pęknięty", "rozkleił", "complaint", "defect", "defective", "broken", "damaged", "faulty"],
+      "fragmenty": [
+        { "id": "reg-reklamacje#1", "tekst": "Reklamację można zgłosić mailem lub przez formularz kontaktowy. W zgłoszeniu prosimy podać numer zamówienia, nazwę produktu i opis wady. Zdjęcia ułatwiają ocenę, ale nie są obowiązkowe. Zgłoszenie otrzymuje numer sprawy, który należy podawać w dalszej korespondencji." },
+        { "id": "reg-reklamacje#2", "tekst": "Na reklamację odpowiadamy w ciągu 14 dni kalendarzowych od otrzymania kompletnego zgłoszenia. Jeśli potrzebujemy dodatkowych informacji lub obejrzenia produktu, informujemy o tym w tym terminie." },
+        { "id": "reg-reklamacje#3", "tekst": "O sposobie rozpatrzenia reklamacji (naprawa, wymiana, obniżenie ceny albo zwrot pieniędzy) decyduje dział jakości po ocenie zgłoszenia i, w razie potrzeby, produktu. Pracownik obsługi nie przesądza wyniku reklamacji przed tą oceną." },
+        { "id": "reg-reklamacje#4", "tekst": "Jeżeli do oceny potrzebny jest produkt, przesyłamy etykietę zwrotną. Koszt odesłania reklamowanego produktu pokrywa producent. Produkt prosimy odesłać oczyszczony, z wyjętymi elementami usztywniającymi, jeśli dają się wyjąć." },
+        { "id": "reg-reklamacje#5", "tekst": "Zgłoszenia, w których opisano uraz, pogorszenie stanu zdrowia lub awarię produktu podczas używania, są przekazywane priorytetowo osobie odpowiedzialnej za nadzór nad wyrobami. Taka osoba kontaktuje się z klientem bezpośrednio." }
+      ]
+    },
+    {
+      "id": "gwarancja", "wersja": "1.4", "status": "zatwierdzony", "obowiazuje_od": "2026-02-01",
+      "typ": "gwarancja", "produkt": null, "temat": "gwarancja",
+      "tytul": "Warunki gwarancji",
+      "slowa_kluczowe": ["gwarancja", "gwarancji", "gwarancyjna", "gwarancyjny", "okres", "miesięcy", "miesiące", "warranty", "guarantee"],
+      "fragmenty": [
+        { "id": "gwarancja#1", "tekst": "Na ortezy, stabilizatory, pasy i kołnierze udzielamy 24 miesięcy gwarancji liczonej od dnia dostawy. Na wkładki ortopedyczne WK-10 gwarancja wynosi 6 miesięcy." },
+        { "id": "gwarancja#2", "tekst": "Gwarancja obejmuje wady materiałowe i wykonawcze ujawnione przy prawidłowym używaniu, na przykład pęknięcie zawiasu lub ramy, rozklejenie się szwów, odpadanie rzepów albo uszkodzenie sprzączek." },
+        { "id": "gwarancja#3", "tekst": "Gwarancja nie obejmuje naturalnego zużycia (np. zmechacenia materiału), uszkodzeń mechanicznych, skutków prania niezgodnego z instrukcją (np. w zbyt wysokiej temperaturze lub suszenia w suszarce) ani samodzielnych przeróbek produktu." },
+        { "id": "gwarancja#4", "tekst": "Aby skorzystać z gwarancji, wystarczy zgłosić wadę jak reklamację, podając numer zamówienia. Gwarancja nie wyłącza uprawnień konsumenta wynikających z przepisów." }
+      ]
+    },
+    {
+      "id": "zwroty", "wersja": "1.3", "status": "zatwierdzony", "obowiazuje_od": "2026-01-15",
+      "typ": "zwroty", "produkt": null, "temat": "zwroty",
+      "tytul": "Zwroty i wymiany",
+      "slowa_kluczowe": ["zwrot", "zwrotu", "zwrócić", "oddać", "odstąpienie", "wymiana", "wymiany", "wymienić", "rozmiar", "większy", "mniejszy", "pieniądze", "refund", "return", "exchange", "swap"],
+      "fragmenty": [
+        { "id": "zwroty#1", "tekst": "Zamówiony produkt można zwrócić bez podawania przyczyny w ciągu 14 dni od dostawy. Wystarczy wysłać nam informację o zwrocie mailem lub przez formularz, podając numer zamówienia." },
+        { "id": "zwroty#2", "tekst": "Zwracany produkt powinien być kompletny, w oryginalnym opakowaniu i bez śladów używania wykraczających poza przymierzenie i sprawdzenie rozmiaru." },
+        { "id": "zwroty#3", "tekst": "Wymiana na inny rozmiar tego samego produktu jest bezpłatna jeden raz, w ciągu 30 dni od dostawy. Po otrzymaniu zgłoszenia wysyłamy etykietę zwrotną, a nowy rozmiar wysyłamy po dotarciu zwrotu do magazynu." },
+        { "id": "zwroty#4", "tekst": "Zwrot pieniędzy następuje w ciągu 14 dni od otrzymania zwracanego produktu, tą samą metodą płatności, którą użyto przy zamówieniu." }
+      ]
+    },
+    {
+      "id": "dostawa", "wersja": "1.0", "status": "zatwierdzony", "obowiazuje_od": "2026-01-15",
+      "typ": "dostawa", "produkt": null, "temat": "dostawa",
+      "tytul": "Dostawa i statusy zamówień",
+      "slowa_kluczowe": ["dostawa", "dostawy", "wysyłka", "wysyłki", "paczka", "paczki", "przesyłka", "kurier", "paczkomat", "status", "kiedy", "doręczenie", "delivery", "shipping", "parcel", "package", "tracking"],
+      "fragmenty": [
+        { "id": "dostawa#1", "tekst": "Zamówienia opłacone w dni robocze do godziny 12:00 wysyłamy zwykle tego samego lub następnego dnia roboczego. Dostawa kurierem lub do paczkomatu trwa zwykle 1–2 dni robocze." },
+        { "id": "dostawa#2", "tekst": "Statusy zamówienia: przyjęte (zamówienie zarejestrowane), w realizacji (kompletowanie w magazynie), wysłane (przekazane przewoźnikowi, dostępny numer przesyłki), dostarczone, wstrzymane (np. brak płatności albo brak towaru; powód jest widoczny w zamówieniu), anulowane." },
+        { "id": "dostawa#3", "tekst": "Numer przesyłki wysyłamy mailem w chwili przekazania paczki przewoźnikowi. Zamówienie wstrzymane z powodu płatności zostaje zwolnione do realizacji automatycznie po zaksięgowaniu wpłaty." }
+      ]
+    },
+    {
+      "id": "rozmiary", "wersja": "1.2", "status": "zatwierdzony", "obowiazuje_od": "2026-03-01",
+      "typ": "rozmiary", "produkt": null, "temat": "rozmiary",
+      "tytul": "Tabela rozmiarów i dobór produktu",
+      "slowa_kluczowe": ["rozmiar", "rozmiaru", "rozmiary", "tabela", "obwód", "zmierzyć", "pomiar", "dobór", "dobrać", "size", "sizing", "measure", "chart"],
+      "fragmenty": [
+        { "id": "rozmiary#1", "tekst": "Rozmiar dobiera się według obwodu mierzonego miękką taśmą krawiecką, bez zaciskania. Jeśli wynik wypada na granicy dwóch rozmiarów, tabela wskazuje rozmiar większy." },
+        { "id": "rozmiary#2", "tekst": "Ortezy kolanowe KX-210 i KX-300 (obwód kolana mierzony na środku rzepki): S 32–36 cm, M 36–40 cm, L 40–44 cm, XL 44–48 cm. Stabilizator nadgarstka NX-110 (obwód nadgarstka): S 13–15 cm, M 15–17 cm, L 17–19 cm; dostępny w wersji na lewą i prawą rękę." },
+        { "id": "rozmiary#3", "tekst": "Orteza SX-150 (obwód kostki): S 19–22 cm, M 22–25 cm, L 25–28 cm. Pas LX-500 (obwód w talii): M 70–85 cm, L 85–100 cm, XL 100–115 cm. Kołnierz CX-40 ma wysokość 8 cm i rozmiary S, M, L według obwodu szyi." },
+        { "id": "rozmiary#4", "tekst": "Po zabiegu, operacji lub urazie wybór produktu, rozmiaru i czasu noszenia należy skonsultować z lekarzem prowadzącym lub fizjoterapeutą. Obsługa klienta nie udziela porad medycznych; możemy przekazać tabelę rozmiarów i dane techniczne produktu." }
+      ]
+    },
+    {
+      "id": "faq-ogolne", "wersja": "1.1", "status": "zatwierdzony", "obowiazuje_od": "2026-01-15",
+      "typ": "faq", "produkt": null, "temat": "ogolne",
+      "tytul": "FAQ ogólne: faktury i kontakt",
+      "slowa_kluczowe": ["faktura", "faktury", "fakturę", "vat", "nip", "kontakt", "godziny", "telefon", "invoice", "contact"],
+      "fragmenty": [
+        { "id": "faq-ogolne#1", "tekst": "Fakturę VAT wystawiamy na życzenie; wystarczy podać dane firmy i NIP przy zamówieniu albo w odpowiedzi na mail potwierdzający. Faktura trafia mailem w ciągu 2 dni roboczych." },
+        { "id": "faq-ogolne#2", "tekst": "Obsługa klienta odpowiada na wiadomości w dni robocze w godzinach 8:00–16:00. Wiadomości wysłane poza tymi godzinami obsługujemy następnego dnia roboczego." }
+      ]
+    },
+
+    {
+      "id": "faq-kx210-material", "wersja": "1.0", "status": "zatwierdzony", "obowiazuje_od": "2026-03-01",
+      "typ": "faq_produktu", "produkt": "KX-210", "temat": "material",
+      "tytul": "KX-210 Flex: materiał i budowa",
+      "slowa_kluczowe": ["materiał", "materiału", "wykonana", "wykonany", "z czego", "skład", "neopren", "neoprenu", "lateks", "lateksu", "alergia", "uczulenie", "aluminium", "budowa", "material", "made of", "latex", "allergy", "fabric"],
+      "fragmenty": [
+        { "id": "faq-kx210-material#1", "tekst": "Orteza KX-210 Flex jest wykonana z oddychającego, perforowanego neoprenu o grubości 3 mm. Ma dwa wyjmowane boczne stabilizatory ze stopu aluminium i silikonowy pierścień wokół rzepki. Produkt nie zawiera lateksu." }
+      ]
+    },
+    {
+      "id": "faq-kx210-pielegnacja", "wersja": "1.0", "status": "wycofany", "obowiazuje_od": "2025-09-01",
+      "typ": "faq_produktu", "produkt": "KX-210", "temat": "pielegnacja",
+      "tytul": "KX-210 Flex: pranie i pielęgnacja (wersja wycofana)",
+      "slowa_kluczowe": ["pranie", "prać", "prania", "pralka", "pralce", "czyszczenie", "wash", "washing", "clean"],
+      "fragmenty": [
+        { "id": "faq-kx210-pielegnacja@1.0#1", "tekst": "Ortezę KX-210 można prać w pralce w temperaturze 40°C." }
+      ]
+    },
+    {
+      "id": "faq-kx210-pielegnacja", "wersja": "1.1", "status": "zatwierdzony", "obowiazuje_od": "2026-03-01",
+      "typ": "faq_produktu", "produkt": "KX-210", "temat": "pielegnacja",
+      "tytul": "KX-210 Flex: pranie i pielęgnacja",
+      "slowa_kluczowe": ["pranie", "prać", "prania", "upranie", "wyprać", "pralka", "pralce", "pralki", "czyszczenie", "czyścić", "wyczyścić", "suszenie", "suszyć", "suszarka", "temperatura", "pielęgnacja", "wash", "washing", "washed", "machine", "clean", "cleaning", "dry", "drying", "care"],
+      "fragmenty": [
+        { "id": "faq-kx210-pielegnacja#1", "tekst": "Przed praniem wyjmij oba boczne stabilizatory. Ortezę KX-210 pierz ręcznie w wodzie do 30°C z łagodnym środkiem piorącym. Nie pierz w pralce, nie wybielaj i nie susz w suszarce ani na kaloryferze. Susz na płasko, z dala od źródeł ciepła." }
+      ]
+    },
+    {
+      "id": "faq-kx210-zakladanie", "wersja": "1.0", "status": "zatwierdzony", "obowiazuje_od": "2026-03-01",
+      "typ": "faq_produktu", "produkt": "KX-210", "temat": "zakladanie",
+      "tytul": "KX-210 Flex: zakładanie",
+      "slowa_kluczowe": ["zakładać", "założyć", "zakładanie", "zakłada", "nałożyć", "zapiąć", "zapinać", "pasy", "instrukcja", "jak", "put on", "wear", "fasten", "straps", "instructions"],
+      "fragmenty": [
+        { "id": "faq-kx210-zakladanie#1", "tekst": "Usiądź i lekko zegnij kolano. Nasuń ortezę KX-210 tak, aby otwór znalazł się na rzepce, a stabilizatory po bokach kolana. Zapnij pasy od dolnego do górnego. Pasy powinny trzymać stabilnie, ale pod każdym powinny mieścić się dwa palce." }
+      ]
+    },
+    {
+      "id": "faq-kx300-material", "wersja": "1.0", "status": "zatwierdzony", "obowiazuje_od": "2026-03-01",
+      "typ": "faq_produktu", "produkt": "KX-300", "temat": "material",
+      "tytul": "KX-300 Carbon: materiał i budowa",
+      "slowa_kluczowe": ["materiał", "materiału", "wykonana", "wykonany", "z czego", "skład", "włókno", "węglowe", "kompozyt", "waga", "waży", "ciężka", "lekka", "zawias", "zawiasy", "lateks", "material", "made of", "weight", "weigh", "hinge", "latex"],
+      "fragmenty": [
+        { "id": "faq-kx300-material#1", "tekst": "Rama ortezy KX-300 Carbon jest wykonana z kompozytu z włóknem węglowym. Orteza ma zawiasy policentryczne z regulacją zakresu ruchu 0–120° co 10° oraz wyściółkę z pianki EVA z pokryciem antybakteryjnym. Masa ortezy w rozmiarze M wynosi około 450 g. Produkt nie zawiera lateksu." }
+      ]
+    },
+    {
+      "id": "faq-kx300-pielegnacja", "wersja": "1.0", "status": "zatwierdzony", "obowiazuje_od": "2026-03-01",
+      "typ": "faq_produktu", "produkt": "KX-300", "temat": "pielegnacja",
+      "tytul": "KX-300 Carbon: czyszczenie i pielęgnacja",
+      "slowa_kluczowe": ["pranie", "prać", "prania", "wyprać", "pralka", "pralce", "czyszczenie", "czyścić", "wyczyścić", "wyściółka", "wyściółkę", "smarować", "suszenie", "pielęgnacja", "wash", "washing", "machine", "clean", "cleaning", "padding", "care"],
+      "fragmenty": [
+        { "id": "faq-kx300-pielegnacja#1", "tekst": "Wyściółkę ortezy KX-300 odepnij (mocowanie na rzepy) i pierz ręcznie w wodzie do 30°C. Ramę i zawiasy przecieraj wilgotną ściereczką; nie zanurzaj zawiasów w wodzie i nie smaruj ich. Wyściółkę susz na płasko przed ponownym przypięciem." }
+      ]
+    },
+    {
+      "id": "faq-kx300-zakladanie", "wersja": "1.0", "status": "zatwierdzony", "obowiazuje_od": "2026-03-01",
+      "typ": "faq_produktu", "produkt": "KX-300", "temat": "zakladanie",
+      "tytul": "KX-300 Carbon: zakładanie i regulacja",
+      "slowa_kluczowe": ["zakładać", "założyć", "zakładanie", "nałożyć", "zapiąć", "pasy", "regulacja", "regulować", "ustawić", "kąt", "zakres", "instrukcja", "put on", "wear", "fasten", "adjust", "adjustment", "angle", "instructions"],
+      "fragmenty": [
+        { "id": "faq-kx300-zakladanie#1", "tekst": "Ortezę KX-300 zakłada się na siedząco, przy lekko zgiętym kolanie: oś zawiasów powinna znaleźć się na wysokości szpary stawowej, a pasy zapina się od środka na zewnątrz. Zakres ruchu zawiasów ustawia lekarz lub fizjoterapeuta; samodzielna zmiana ustawień nie jest zalecana przez producenta." }
+      ]
+    },
+    {
+      "id": "faq-nx110-material", "wersja": "1.0", "status": "zatwierdzony", "obowiazuje_od": "2026-03-01",
+      "typ": "faq_produktu", "produkt": "NX-110", "temat": "material",
+      "tytul": "NX-110: materiał i budowa",
+      "slowa_kluczowe": ["materiał", "materiału", "wykonany", "wykonana", "z czego", "skład", "dzianina", "szyna", "szyną", "lateks", "alergia", "material", "made of", "splint", "latex", "fabric"],
+      "fragmenty": [
+        { "id": "faq-nx110-material#1", "tekst": "Stabilizator NX-110 jest wykonany z elastycznej dzianiny z poliamidu i elastanu. Ma wyjmowaną aluminiową szynę dłoniową i zapięcie na rzep. Występuje w wersji na lewą i prawą rękę. Produkt nie zawiera lateksu." }
+      ]
+    },
+    {
+      "id": "faq-nx110-pielegnacja", "wersja": "1.0", "status": "zatwierdzony", "obowiazuje_od": "2026-03-01",
+      "typ": "faq_produktu", "produkt": "NX-110", "temat": "pielegnacja",
+      "tytul": "NX-110: pranie i pielęgnacja",
+      "slowa_kluczowe": ["pranie", "prać", "prania", "wyprać", "pralka", "pralce", "pralki", "czyszczenie", "suszenie", "pielęgnacja", "wash", "washing", "machine", "clean", "dry", "care"],
+      "fragmenty": [
+        { "id": "faq-nx110-pielegnacja#1", "tekst": "Przed praniem wyjmij szynę z NX-110 i zapnij rzepy. Stabilizator można prać w pralce w worku do prania, w programie delikatnym do 30°C, albo ręcznie. Nie susz w suszarce bębnowej." }
+      ]
+    },
+    {
+      "id": "faq-nx110-zakladanie", "wersja": "1.0", "status": "zatwierdzony", "obowiazuje_od": "2026-03-01",
+      "typ": "faq_produktu", "produkt": "NX-110", "temat": "zakladanie",
+      "tytul": "NX-110: zakładanie",
+      "slowa_kluczowe": ["zakładać", "założyć", "zakładanie", "nałożyć", "zapiąć", "rzep", "instrukcja", "szynę", "włożyć", "put on", "wear", "fasten", "instructions"],
+      "fragmenty": [
+        { "id": "faq-nx110-zakladanie#1", "tekst": "Włóż szynę do kieszeni po stronie dłoniowej. Wsuń dłoń tak, aby kciuk przeszedł przez otwór, a szyna przylegała do wewnętrznej strony nadgarstka. Zapnij rzepy, zaczynając od paska najbliżej dłoni." }
+      ]
+    },
+    {
+      "id": "faq-sx150-material", "wersja": "1.0", "status": "zatwierdzony", "obowiazuje_od": "2026-03-01",
+      "typ": "faq_produktu", "produkt": "SX-150", "temat": "material",
+      "tytul": "SX-150: materiał i budowa",
+      "slowa_kluczowe": ["materiał", "materiału", "wykonana", "z czego", "skład", "poliester", "sznurowanie", "sznurowana", "but", "buta", "material", "made of", "laces", "shoe", "fabric"],
+      "fragmenty": [
+        { "id": "faq-sx150-material#1", "tekst": "Orteza SX-150 jest sznurowana, wykonana z wytrzymałego poliestru z bocznymi wkładkami usztywniającymi i pasami w kształcie ósemki. Jest na tyle cienka, że mieści się w większości butów sportowych." }
+      ]
+    },
+    {
+      "id": "faq-sx150-pielegnacja", "wersja": "1.0", "status": "zatwierdzony", "obowiazuje_od": "2026-03-01",
+      "typ": "faq_produktu", "produkt": "SX-150", "temat": "pielegnacja",
+      "tytul": "SX-150: pranie i pielęgnacja",
+      "slowa_kluczowe": ["pranie", "prać", "prania", "wyprać", "pralka", "pralce", "czyszczenie", "suszenie", "pielęgnacja", "wash", "washing", "machine", "clean", "care"],
+      "fragmenty": [
+        { "id": "faq-sx150-pielegnacja#1", "tekst": "Przed praniem wyjmij wkładki usztywniające z SX-150. Pierz ręcznie w wodzie do 30°C. Nie wybielaj, nie prasuj i nie susz w suszarce." }
+      ]
+    },
+    {
+      "id": "faq-sx150-zakladanie", "wersja": "1.0", "status": "zatwierdzony", "obowiazuje_od": "2026-03-01",
+      "typ": "faq_produktu", "produkt": "SX-150", "temat": "zakladanie",
+      "tytul": "SX-150: zakładanie",
+      "slowa_kluczowe": ["zakładać", "założyć", "zakładanie", "zawiązać", "sznurować", "sznurowanie", "pasy", "ósemka", "instrukcja", "put on", "wear", "lace", "straps", "instructions"],
+      "fragmenty": [
+        { "id": "faq-sx150-zakladanie#1", "tekst": "Załóż SX-150 na skarpetę, zasznuruj od dołu ku górze, a następnie poprowadź pasy w kształcie ósemki wokół stopy i zapnij je na rzep z przodu kostki. Na końcu włóż stopę do buta." }
+      ]
+    },
+    {
+      "id": "faq-cx40-material", "wersja": "1.0", "status": "zatwierdzony", "obowiazuje_od": "2026-03-01",
+      "typ": "faq_produktu", "produkt": "CX-40", "temat": "material",
+      "tytul": "CX-40 Soft: materiał i budowa",
+      "slowa_kluczowe": ["materiał", "materiału", "wykonany", "z czego", "skład", "pianka", "pianki", "pokrowiec", "bawełna", "bawełniany", "wysokość", "material", "made of", "foam", "cover", "cotton", "height"],
+      "fragmenty": [
+        { "id": "faq-cx40-material#1", "tekst": "Kołnierz CX-40 Soft ma wkład z pianki poliuretanowej w zdejmowanym bawełnianym pokrowcu i zapięcie na rzep z tyłu. Wysokość kołnierza wynosi 8 cm." }
+      ]
+    },
+    {
+      "id": "faq-cx40-pielegnacja", "wersja": "1.0", "status": "zatwierdzony", "obowiazuje_od": "2026-03-01",
+      "typ": "faq_produktu", "produkt": "CX-40", "temat": "pielegnacja",
+      "tytul": "CX-40 Soft: pranie i pielęgnacja",
+      "slowa_kluczowe": ["pranie", "prać", "prania", "wyprać", "pralka", "pralce", "pokrowiec", "pokrowca", "czyszczenie", "pielęgnacja", "wash", "washing", "machine", "cover", "clean", "care"],
+      "fragmenty": [
+        { "id": "faq-cx40-pielegnacja#1", "tekst": "Pokrowiec kołnierza CX-40 zdejmij i pierz w pralce do 40°C. Wkładu piankowego nie pierz; w razie potrzeby przetrzyj go wilgotną ściereczką i wysusz przed założeniem pokrowca." }
+      ]
+    },
+    {
+      "id": "faq-cx40-zakladanie", "wersja": "1.0", "status": "zatwierdzony", "obowiazuje_od": "2026-03-01",
+      "typ": "faq_produktu", "produkt": "CX-40", "temat": "zakladanie",
+      "tytul": "CX-40 Soft: zakładanie",
+      "slowa_kluczowe": ["zakładać", "założyć", "zakładanie", "zapiąć", "rzep", "instrukcja", "put on", "wear", "fasten", "instructions"],
+      "fragmenty": [
+        { "id": "faq-cx40-zakladanie#1", "tekst": "Przyłóż kołnierz CX-40 wyższą częścią pod brodę, owiń wokół szyi i zapnij rzep z tyłu. Kołnierz powinien przylegać, ale nie uciskać; między kołnierzem a szyją powinien mieścić się palec." }
+      ]
+    },
+    {
+      "id": "faq-lx500-material", "wersja": "1.0", "status": "zatwierdzony", "obowiazuje_od": "2026-03-01",
+      "typ": "faq_produktu", "produkt": "LX-500", "temat": "material",
+      "tytul": "LX-500: materiał i budowa",
+      "slowa_kluczowe": ["materiał", "materiału", "wykonany", "z czego", "skład", "siateczka", "fiszbiny", "fiszbin", "oddychający", "material", "made of", "mesh", "stays", "breathable"],
+      "fragmenty": [
+        { "id": "faq-lx500-material#1", "tekst": "Pas LX-500 jest wykonany z oddychającej siateczki 3D. Ma cztery elastyczne stalowe fiszbiny z tyłu oraz dodatkowy pas wzmacniający zapinany na rzep." }
+      ]
+    },
+    {
+      "id": "faq-lx500-pielegnacja", "wersja": "1.0", "status": "zatwierdzony", "obowiazuje_od": "2026-03-01",
+      "typ": "faq_produktu", "produkt": "LX-500", "temat": "pielegnacja",
+      "tytul": "LX-500: pranie i pielęgnacja",
+      "slowa_kluczowe": ["pranie", "prać", "prania", "wyprać", "pralka", "pralce", "czyszczenie", "suszenie", "pielęgnacja", "wash", "washing", "machine", "clean", "care"],
+      "fragmenty": [
+        { "id": "faq-lx500-pielegnacja#1", "tekst": "Pas LX-500 pierz ręcznie w wodzie do 30°C, z zapiętymi rzepami. Fiszbiny są wszyte na stałe; nie wyjmuj ich. Nie susz w suszarce ani na grzejniku." }
+      ]
+    },
+    {
+      "id": "faq-lx500-zakladanie", "wersja": "1.0", "status": "zatwierdzony", "obowiazuje_od": "2026-03-01",
+      "typ": "faq_produktu", "produkt": "LX-500", "temat": "zakladanie",
+      "tytul": "LX-500: zakładanie",
+      "slowa_kluczowe": ["zakładać", "założyć", "zakładanie", "zapiąć", "rzep", "instrukcja", "put on", "wear", "fasten", "instructions"],
+      "fragmenty": [
+        { "id": "faq-lx500-zakladanie#1", "tekst": "Załóż pas LX-500 na stojąco, fiszbinami do kręgosłupa, tak aby dolna krawędź znalazła się na wysokości kości ogonowej. Zapnij główny rzep z przodu, a następnie dociągnij pas wzmacniający." }
+      ]
+    }
+  ]
+}
