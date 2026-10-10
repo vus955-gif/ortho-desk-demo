@@ -4,7 +4,7 @@ AI-assisted triage of customer messages for a **fictional** manufacturer of orth
 *describes* each message; explicit, deterministic rules *decide* what happens with it: answer automatically (AUTO),
 prepare a draft for a person to approve (DRAFT), or escalate immediately to the person responsible (ESKALACJA).
 
-**Live demo:** _link added after deployment_ · **Evaluation:** the "Wyniki ewaluacji" page of the demo
+**Live demo:** https://ortho-desk-demo.vercel.app · **Evaluation results:** https://ortho-desk-demo.vercel.app/wyniki
 
 The company, products, customers, orders and messages are all invented. The demo UI is in Polish, like the specification.
 
@@ -156,7 +156,7 @@ table by a unit test before any model run.
 - Implementation with Claude Code: one session on 2026-10-10, about 50 minutes (14:47–15:35 local time) from reading the
   specification to a tested repository with a completed evaluation run. Most of that time went to the test set,
   its independent review and the evaluation harness, not to the UI.
-- Deployment to Vercel: done by the author afterwards.
+- Deployment: Vercel, from the GitHub repository.
 
 ## How this was built
 
