@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Atkinson_Hyperlegible_Mono, Atkinson_Hyperlegible_Next } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { Nav } from "../components/Nav";
 import "./globals.css";
 
@@ -40,6 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <p>Klasyfikacja i szkice: Claude Haiku 5.5 (Anthropic API). Tryb wybiera deterministyczny silnik reguł, nie model.</p>
           </footer>
         </div>
+        <Analytics />
       </body>
     </html>
   );
