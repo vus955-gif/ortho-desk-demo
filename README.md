@@ -59,12 +59,14 @@ flowchart LR
 | 3 | model/schema error, or the decision needs an attachment the AI does not inspect | DRAFT |
 | 4 | flag `podejrzenie_manipulacji` (instructions aimed at the system) | DRAFT |
 | 5 | confidence < 0.85 or flag `wiele_watkow` (several matters) | DRAFT |
-| 6 | order status for the sender's own order, or a product FAQ with one unambiguous approved source | AUTO |
+| 6 | order status for the sender's own order, or a product FAQ with one unambiguous approved source; the reply must then pass a code check (D-32) | AUTO |
 | 7 | everything else | DRAFT |
 
 The UI shows the fired rule, plus for every earlier rule why it did not apply. A collapsible trace panel shows the
 classification JSON, schema validation, both code checks, rule-set version, model and prompt versions, timings and cost.
-The API streams its answer: the rule decision is shown as soon as it exists (about 2–3 s), and the draft follows. Any of
+The API streams its answer: the rule decision is shown as soon as it exists (about 2–3 s), and the draft follows. An AUTO
+decision is marked as conditional until code has checked the reply: a missing or empty reply, or one not grounded only in
+the code-selected sources, turns the case into a DRAFT for a person (rule 7, `DECISIONS.md` D-32). Any of
 the 100 test cases can be opened in the demo with `/?przypadek=TC-019`, linked from every row of the results page. A
 "Jak to działa" page explains the approach in Polish for non-technical readers.
 

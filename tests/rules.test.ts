@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { decide, PROG_PEWNOSCI, REGULY } from "../lib/rules";
+import { checkAutoAnswer, confirmAuto, decide, isConditionalAuto, PROG_PEWNOSCI, REGULY } from "../lib/rules";
 import type { EngineInput, Flaga, Kategoria, Klasyfikacja, OrderCheck, SourceCheck } from "../lib/types";
 
 const order = (eligible: boolean): OrderCheck => ({
@@ -191,5 +191,58 @@ describe("decision trace", () => {
   it("is deterministic", () => {
     const i = input({ klasyfikacja: klas("pytanie_o_produkt", [], 0.9) });
     expect(decide(i)).toEqual(decide(i));
+  });
+});
+
+describe("AUTO answer check after the draft (D-32)", () => {
+  const auto = () => decide(input({ klasyfikacja: klas("status_zamowienia") }));
+  const ans = (over: Partial<{ tekst: string; uzyte_zrodla: string[]; odrzucone_zrodla: string[] }> = {}) => ({
+    tekst: "Paczka jest w drodze.",
+    uzyte_zrodla: ["zamowienie:ZAM-20417"],
+    odrzucone_zrodla: [] as string[],
+    ...over,
+  });
+
+  it("accepts a non-empty answer grounded only in provided sources", () => {
+    expect(checkAutoAnswer(ans(), null).ok).toBe(true);
+  });
+  it.each([
+    ["no answer (model error)", null, "przekroczony czas odpowiedzi modelu", /przekroczony czas/],
+    ["empty text", ans({ tekst: "  " }), null, /pusta/],
+    ["no cited source", ans({ uzyte_zrodla: [] }), null, /żadnego źródła/],
+    ["only an invented source", ans({ uzyte_zrodla: [], odrzucone_zrodla: ["x#1"] }), null, /spoza listy \(x#1\)/],
+    ["an invented source next to a real one", ans({ odrzucone_zrodla: ["x#1"] }), null, /spoza listy/],
+  ] as const)("rejects %s", (_name, a, blad, why) => {
+    const c = checkAutoAnswer(a, blad);
+    expect(c.ok).toBe(false);
+    expect(c.dlaczego).toMatch(why);
+  });
+
+  it("a failed check turns AUTO into DRAFT by rule 7: rule 6 no longer holds, the trace says why", () => {
+    const d = confirmAuto(auto(), { ok: false, dlaczego: "brak odpowiedzi modelu (timeout)" });
+    expect(d.tryb).toBe("DRAFT");
+    expect(d.regula).toEqual({ id: 7, nazwa: REGULY[6].nazwa });
+    expect(d.slad.map((s) => [s.id, s.spelniona])).toEqual([
+      [1, false], [2, false], [3, false], [4, false], [5, false], [6, false], [7, true],
+    ]);
+    expect(d.slad[5].dlaczego).toContain("timeout");
+    expect(d.uzasadnienie).toContain("timeout");
+  });
+  it("a passed check leaves the decision untouched", () => {
+    const d = auto();
+    expect(confirmAuto(d, { ok: true, dlaczego: "ok" })).toBe(d);
+  });
+  it("never changes DRAFT or ESKALACJA", () => {
+    const draft = decide(input({ klasyfikacja: klas("reklamacja") }));
+    const esk = decide(input({ klasyfikacja: klas("reklamacja", ["mozliwy_incydent"]) }));
+    const fail = { ok: false, dlaczego: "x" };
+    expect(confirmAuto(draft, fail)).toBe(draft);
+    expect(confirmAuto(esk, fail)).toBe(esk);
+  });
+  it("AUTO shown while the answer is being written is conditional; other modes are final", () => {
+    expect(isConditionalAuto("AUTO", true)).toBe(true);
+    expect(isConditionalAuto("AUTO", false)).toBe(false);
+    expect(isConditionalAuto("DRAFT", true)).toBe(false);
+    expect(isConditionalAuto("ESKALACJA", true)).toBe(false);
   });
 });

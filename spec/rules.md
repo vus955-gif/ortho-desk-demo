@@ -33,6 +33,9 @@ Nazewnictwo trybów: specyfikacja używa nazw AUTO / SZKIC / ESKALACJA, a demo u
 | 6 | Mail lub formularz + kategoria AUTO + jednoznaczne źródło. Status: zamówienie przypisane do testowego klienta (jego dane). FAQ produktu: zatwierdzona baza, bez wymogu zamówienia | AUTO |
 | 7 | Wszystkie pozostałe | DRAFT |
 
+> Doprecyzowanie implementacyjne (nie jest częścią specyfikacji): reguła 6 jest potwierdzana dopiero po napisaniu
+> odpowiedzi. Odpowiedź bez treści albo nieoparta wyłącznie na źródłach z listy daje regułę 7 (DRAFT). Zob. D-32 w `DECISIONS.md`.
+
 Zasady towarzyszące (cytaty ze specyfikacji, skrócone):
 
 - „Samo dołączenie pliku nie wyłącza AUTO. AI nie analizuje załączników; gdy są potrzebne do oceny sprawy, decyzja pozostaje po stronie pracownika."

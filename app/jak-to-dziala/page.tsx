@@ -43,7 +43,7 @@ export default function JakToDziala() {
             <strong>Reguły wybierają tryb.</strong> Siedem reguł sprawdzanych po kolei; wygrywa pierwsza spełniona, a reguły ryzyka są na górze.
           </li>
           <li>
-            <strong>Model pisze tekst ze źródeł wybranych przez kod:</strong> odpowiedź, szkic dla pracownika albo notatkę dla osoby odpowiedzialnej. Przy eskalacji klient dostaje stałe potwierdzenie bez udziału AI.
+            <strong>Model pisze tekst ze źródeł wybranych przez kod:</strong> odpowiedź, szkic dla pracownika albo notatkę dla osoby odpowiedzialnej. Przy eskalacji klient dostaje stałe potwierdzenie bez udziału AI. Odpowiedź AUTO kod jeszcze sprawdza: musi mieć treść i opierać się wyłącznie na źródłach z listy, inaczej sprawa trafia do pracownika jako szkic.
           </li>
         </ol>
       </section>

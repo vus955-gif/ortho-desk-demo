@@ -1,5 +1,5 @@
 import type { PipelineResult } from "../lib/pipeline";
-import { REGULY } from "../lib/rules";
+import { isConditionalAuto, REGULY } from "../lib/rules";
 import type { Przypadek } from "../lib/testcases";
 import type { Tryb } from "../lib/types";
 
@@ -20,8 +20,12 @@ export const KATEGORIA_NAZWA: Record<string, string> = {
 
 const RISK_FLAGS = new Set(["mozliwy_incydent", "grozba_prawna", "dane_wrazliwe"]);
 
-function Ladder({ r }: { r: PipelineResult }) {
+function Ladder({ r, conditional }: { r: PipelineResult; conditional: boolean }) {
   const fired = r.decyzja.regula.id;
+  const firedText = (dlaczego: string) =>
+    conditional
+      ? `Zadziałała warunkowo. ${dlaczego} Kod sprawdzi jeszcze odpowiedź modelu; jeśli jej nie przyjmie, zadziała reguła 7.`
+      : `Zadziałała. ${dlaczego}`;
   return (
     <ol className="ladder" aria-label="Reguły decyzyjne w kolejności sprawdzania">
       {REGULY.map((rule) => {
@@ -33,7 +37,7 @@ function Ladder({ r }: { r: PipelineResult }) {
             <span className="cond">{rule.nazwa}</span>
             <span className={`mchip c-${rule.tryb}`}>{rule.tryb}</span>
             <span className="reason">
-              {t ? (rule.id === fired ? `Zadziałała. ${t.dlaczego}` : `Nie dotyczy. ${t.dlaczego}`) : "Niesprawdzana: wcześniejsza reguła już zdecydowała."}
+              {t ? (rule.id === fired ? firedText(t.dlaczego) : `Nie dotyczy. ${t.dlaczego}`) : "Niesprawdzana: wcześniejsza reguła już zdecydowała."}
             </span>
           </li>
         );
@@ -57,7 +61,10 @@ function Draft({ r, pending }: { r: PipelineResult; pending: boolean }) {
           <span className="pending-bar" aria-hidden="true" />
           <span>
             Model pisze {r.decyzja.tryb === "ESKALACJA" ? "notatkę" : "tekst"} wyłącznie z {r.zrodla.length}{" "}
-            {r.zrodla.length === 1 ? "źródła wybranego" : "źródeł wybranych"} przez kod. Decyzja powyżej jest już ostateczna.
+            {r.zrodla.length === 1 ? "źródła wybranego" : "źródeł wybranych"} przez kod.{" "}
+            {isConditionalAuto(r.decyzja.tryb, pending)
+              ? "AUTO jest warunkowe: kod sprawdzi odpowiedź (treść i źródła z listy), a jeśli jej nie przyjmie, sprawa trafi do pracownika jako DRAFT."
+              : "Decyzja powyżej jest już ostateczna."}
           </span>
         </div>
       )}
@@ -236,6 +243,7 @@ export function ResultView({
 }) {
   const z = r.wejscie;
   const expected = sample?.oczekiwane ?? null;
+  const conditional = isConditionalAuto(r.decyzja.tryb, draftPending);
   return (
     <div className="case">
       {recorded && (
@@ -263,6 +271,11 @@ export function ResultView({
         <p className="mode">{r.decyzja.tryb}</p>
         <p className="what">{TRYB_OPIS[r.decyzja.tryb]}. Reguła {r.decyzja.regula.id}: {r.decyzja.regula.nazwa}.</p>
         <p className="why">{r.decyzja.uzasadnienie}</p>
+        {conditional && (
+          <p className="why">
+            <strong>Warunkowo.</strong> AUTO zostaje tylko wtedy, gdy kod przyjmie odpowiedź modelu: musi mieć treść i opierać się wyłącznie na źródłach z listy. Inaczej sprawa trafi do pracownika (DRAFT, reguła 7).
+          </p>
+        )}
         {expected && sample && (
           <div className="expected">
             <p>
@@ -277,7 +290,7 @@ export function ResultView({
 
       <section className="panel" aria-labelledby="h-rules">
         <h2 id="h-rules">Dlaczego ten tryb</h2>
-        <Ladder r={r} />
+        <Ladder r={r} conditional={conditional} />
       </section>
 
       <Draft r={r} pending={draftPending} />

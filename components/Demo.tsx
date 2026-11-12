@@ -4,6 +4,7 @@ import { MAX_TEMAT, MAX_TRESC } from "../lib/limits";
 import type { PipelineResult } from "../lib/pipeline";
 import { SZYBKIE_TESTY } from "../lib/presets";
 import { isSnapshot, needsSnapshot, settle, type RunAccumulator, type Snapshot } from "../lib/settle";
+import { isConditionalAuto } from "../lib/rules";
 import { readNdjson } from "../lib/stream";
 import { GRUPA_NAZWA, GRUPY, type Przypadek } from "../lib/testcases";
 import type { Kanal, Zgloszenie } from "../lib/types";
@@ -29,7 +30,10 @@ function announcement(view: View): string {
   if (!view.r) return "Przetwarzanie zgłoszenia: model opisuje wiadomość.";
   const d = `${view.r.decyzja.tryb}, reguła ${view.r.decyzja.regula.id}: ${view.r.decyzja.regula.nazwa}.`;
   if (view.recorded) return `Zapis, nie wynik na żywo. Decyzja: ${d}`;
-  if (view.phase === "drafting") return `Decyzja: ${d} Model pisze tekst.`;
+  if (view.phase === "drafting")
+    return isConditionalAuto(view.r.decyzja.tryb, true)
+      ? `Wstępna decyzja: ${d} Model pisze odpowiedź, kod ją jeszcze sprawdzi.`
+      : `Decyzja: ${d} Model pisze tekst.`;
   return `Gotowe. Decyzja: ${d}`;
 }
 
