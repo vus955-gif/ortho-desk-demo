@@ -229,3 +229,9 @@ decyzji jak w zapisie). Kontrola działa tylko tam, gdzie powstaje odpowiedź: w
 (TC-001, TC-016, TC-091 w `public/snapshots.json`) przechodzą kontrolę, więc opublikowane liczby pozostają aktualne.
 Gdyby w przyszłym przebiegu odpowiedź któregoś z 16 przykładów nie przeszła kontroli, test replay wskaże ten wiersz,
 bo odtwarza tylko reguły 1–7. To sygnał do świadomej oceny, a nie błąd do wyciszenia.
+
+**D-33. Prompt szkicu 1.3: wskazówki trafiają także do odpowiedzi AUTO.** Zadanie dla trybu AUTO pomijało listę
+wskazówek, którą kod przygotowuje dla każdego zgłoszenia (`draftHints` w `lib/pipeline.ts`). W praktyce ginęła jedyna
+wskazówka możliwa przy AUTO: przy załączniku (status albo pytanie o produkt, D-09) odpowiedź miała potwierdzić, że plik
+przyjęto i oceni go pracownik, bo AI go nie analizowało. Teraz każdy tryb dostaje wskazówki (test `tests/prompts.test.ts`).
+Zapisane przykłady (`public/snapshots.json`) powstały z wcześniejszą wersją promptu i nie są nadpisywane (D-18, D-24).

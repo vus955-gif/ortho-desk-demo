@@ -4,7 +4,8 @@
 import type { Jezyk, Tryb, Zgloszenie } from "./types";
 
 export const PROMPT_KLASYFIKACJI_WERSJA = "klasyfikacja-1.0";
-export const PROMPT_SZKICU_WERSJA = "szkic-1.2";
+// 1.3: the AUTO task also receives the per-message hints (D-33).
+export const PROMPT_SZKICU_WERSJA = "szkic-1.3";
 
 export const SYSTEM_KLASYFIKACJA = `Jesteś modułem klasyfikacji w systemie obsługi zgłoszeń fikcyjnego producenta sprzętu ortopedycznego (ortezy, stabilizatory, pasy, kołnierze, wkładki). Twoje jedyne zadanie to opisać zgłoszenie klienta w formacie JSON. Nie odpowiadasz klientowi, nie wybierasz trybu obsługi i nie wykonujesz żadnych działań.
 
@@ -73,15 +74,19 @@ export interface DraftSource {
 const JEZYK_NAZWA: Record<Jezyk, string> = { pl: "polskim", en: "angielskim" };
 
 export function zadanieSzkicu(tryb: Tryb, jezyk: Jezyk, wskazowki: string[]): string {
+  // Every mode gets the per-message hints (e.g. "confirm the attachment was received"), AUTO included.
+  const lista = (naglowek: string) => (wskazowki.length ? `\n${naglowek}:\n- ${wskazowki.join("\n- ")}` : "");
   if (tryb === "AUTO")
-    return `TRYB: AUTO. Napisz ostateczną odpowiedź do klienta w języku ${JEZYK_NAZWA[jezyk]}. Zostanie wysłana bez akceptacji pracownika, więc ma być kompletna i oparta wyłącznie na źródłach. Zakończ jednym podpisem: „Zespół obsługi klienta" w odpowiedzi po polsku albo „Customer Service Team" w odpowiedzi po angielsku.`;
+    return `TRYB: AUTO. Napisz ostateczną odpowiedź do klienta w języku ${JEZYK_NAZWA[jezyk]}. Zostanie wysłana bez akceptacji pracownika, więc ma być kompletna i oparta wyłącznie na źródłach. Zakończ jednym podpisem: „Zespół obsługi klienta" w odpowiedzi po polsku albo „Customer Service Team" w odpowiedzi po angielsku.${lista(
+      "Wskazówki dla tego zgłoszenia",
+    )}`;
   if (tryb === "DRAFT")
-    return `TRYB: DRAFT. Napisz szkic odpowiedzi do klienta w języku ${JEZYK_NAZWA[jezyk]}, do akceptacji przez pracownika. Odnieś się do każdej sprawy klienta. Tam, gdzie źródła nie wystarczają lub decyzję musi podjąć człowiek, wstaw znacznik [DO UZUPEŁNIENIA: czego brakuje]. Zakończ jednym podpisem: „Zespół obsługi klienta" po polsku albo „Customer Service Team" po angielsku.${
-      wskazowki.length ? `\nWskazówki dla tego zgłoszenia:\n- ${wskazowki.join("\n- ")}` : ""
-    }`;
-  return `TRYB: ESKALACJA. Napisz po polsku zwięzłą notatkę wewnętrzną dla osoby odpowiedzialnej za nadzór nad wyrobami. To NIE jest odpowiedź do klienta (klient dostaje osobne, stałe potwierdzenie przyjęcia). Użyj nagłówków: „Co zgłoszono" (fakty z wiadomości, bez oceny medycznej), „Produkt i zamówienie", „Dlaczego eskalacja", „Czego brakuje do oceny", „Proponowane pierwsze kroki" (np. kontakt z klientem, prośba o zabezpieczenie produktu, sprawdzenie partii). Nie kwalifikuj zdarzenia jako incydentu w rozumieniu przepisów; to decyzja człowieka.${
-    wskazowki.length ? `\nKontekst:\n- ${wskazowki.join("\n- ")}` : ""
-  }`;
+    return `TRYB: DRAFT. Napisz szkic odpowiedzi do klienta w języku ${JEZYK_NAZWA[jezyk]}, do akceptacji przez pracownika. Odnieś się do każdej sprawy klienta. Tam, gdzie źródła nie wystarczają lub decyzję musi podjąć człowiek, wstaw znacznik [DO UZUPEŁNIENIA: czego brakuje]. Zakończ jednym podpisem: „Zespół obsługi klienta" po polsku albo „Customer Service Team" po angielsku.${lista(
+      "Wskazówki dla tego zgłoszenia",
+    )}`;
+  return `TRYB: ESKALACJA. Napisz po polsku zwięzłą notatkę wewnętrzną dla osoby odpowiedzialnej za nadzór nad wyrobami. To NIE jest odpowiedź do klienta (klient dostaje osobne, stałe potwierdzenie przyjęcia). Użyj nagłówków: „Co zgłoszono" (fakty z wiadomości, bez oceny medycznej), „Produkt i zamówienie", „Dlaczego eskalacja", „Czego brakuje do oceny", „Proponowane pierwsze kroki" (np. kontakt z klientem, prośba o zabezpieczenie produktu, sprawdzenie partii). Nie kwalifikuj zdarzenia jako incydentu w rozumieniu przepisów; to decyzja człowieka.${lista(
+    "Kontekst",
+  )}`;
 }
 
 export function userSzkic(args: {
