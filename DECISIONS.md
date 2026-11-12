@@ -222,7 +222,9 @@ poprawnego źródła) zostawiałby AUTO, w którym część faktów mogła pocho
 *Strumień w UI (D-30):* decyzja jest nadal wysyłana zaraz po klasyfikacji, bo DRAFT i ESKALACJA są wtedy ostateczne.
 AUTO jest pokazywane jako **warunkowe** (werdykt, drabinka reguł, pasek etapów, komunikat dla czytnika ekranu), a końcowy
 wynik je potwierdza albo zastępuje decyzją DRAFT z reguły 7. Wybrano aktualizację, a nie wstrzymanie decyzji, bo
-wstrzymanie opóźniłoby pokazanie trybu w sprawach AUTO o czas pisania odpowiedzi (do 12 s).
+wstrzymanie opóźniłoby pokazanie trybu w sprawach AUTO o czas pisania odpowiedzi (do 12 s). Gdy połączenie przerwie się
+po wstępnym AUTO, przeglądarka stosuje tę samą regułę (`lib/settle.ts`): bez odpowiedzi AUTO nie zostaje, demo pokazuje
+DRAFT z reguły 7 i komunikat o przerwanym połączeniu.
 *Wpływ na opublikowane wyniki:* reguły 1–7 liczone z klasyfikacji się nie zmieniły (`tests/replay.test.ts`: 100/100
 decyzji jak w zapisie). Kontrola działa tylko tam, gdzie powstaje odpowiedź: w demo na żywo i w 16 przykładach ewaluacji
 (D-23). Pozostałe 84 przypadki ewaluacji nie mają szkicu, więc mierzą same reguły 1–7. Trzy zapisane przykłady AUTO

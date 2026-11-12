@@ -1,8 +1,19 @@
 import { describe, expect, it } from "vitest";
 import type { PipelineResult } from "../lib/pipeline";
 import { isSnapshot, needsSnapshot, settle, type RunAccumulator, type Snapshot } from "../lib/settle";
+import { REGULY } from "../lib/rules";
+import type { Decyzja } from "../lib/types";
 
-const res = (blad: string | null = null) => ({ blad_modelu: blad }) as unknown as PipelineResult;
+const decyzja = (tryb: "AUTO" | "DRAFT"): Decyzja => ({
+  tryb,
+  regula: tryb === "AUTO" ? { id: 6, nazwa: REGULY[5].nazwa } : { id: 7, nazwa: REGULY[6].nazwa },
+  uzasadnienie: "test",
+  slad: [{ id: tryb === "AUTO" ? 6 : 7, nazwa: "x", tryb, spelniona: true, dlaczego: "test" }],
+  wersja_regul: "1.1",
+  prog_pewnosci: 0.85,
+});
+const res = (blad: string | null = null, tryb: "AUTO" | "DRAFT" = "DRAFT") =>
+  ({ blad_modelu: blad, decyzja: decyzja(tryb) }) as unknown as PipelineResult;
 const acc = (p: Partial<RunAccumulator>): RunAccumulator => ({ r: null, fail: null, status: 200, pending: false, ...p });
 const snap: Snapshot = { wygenerowano: "2026-10-10T13:30:23Z", wyniki: { "TC-001": res() } };
 
@@ -14,6 +25,18 @@ describe("settle: what the demo shows after a request", () => {
     const o = settle(acc({ r: res(), pending: true }), null, null);
     expect(o.kind).toBe("success");
     expect(o.kind === "success" && o.note).toMatch(/przed szkicem/);
+  });
+  it("stream cut after a conditional AUTO → not shown as AUTO: without a checked answer it is DRAFT (rule 7)", () => {
+    const o = settle(acc({ r: res(null, "AUTO"), pending: true }), "TC-001", snap);
+    expect(o.kind).toBe("success");
+    if (o.kind !== "success") return;
+    expect(o.r.decyzja.tryb).toBe("DRAFT");
+    expect(o.r.decyzja.regula.id).toBe(7);
+    expect(o.note).toMatch(/nie zostało potwierdzone/);
+  });
+  it("a completed AUTO result is shown as it came", () => {
+    const o = settle(acc({ r: res(null, "AUTO") }), null, null);
+    expect(o.kind === "success" && o.r.decyzja.tryb).toBe("AUTO");
   });
   it("custom message + model failure → rule-3 result with an explanation", () => {
     const o = settle(acc({ r: res("timeout") }), null, null);

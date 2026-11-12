@@ -1,5 +1,6 @@
 // What the demo shows once a request has ended. Pure, so every failure path is unit-tested.
 import type { PipelineResult } from "./pipeline";
+import { confirmAuto } from "./rules";
 
 export interface Snapshot {
   wygenerowano: string;
@@ -31,8 +32,16 @@ export const needsSnapshot = (acc: RunAccumulator, sampleId: string | null) => !
 
 export function settle(acc: RunAccumulator, sampleId: string | null, snap: Snapshot | null): Outcome {
   const r = acc.r;
-  if (r && !r.blad_modelu)
+  if (r && !r.blad_modelu) {
+    // AUTO before the answer is only conditional (D-32). With no checked answer received it cannot stay AUTO.
+    if (acc.pending && r.decyzja.tryb === "AUTO")
+      return {
+        kind: "success",
+        r: { ...r, decyzja: confirmAuto(r.decyzja, { ok: false, dlaczego: "połączenie przerwało się przed odpowiedzią modelu" }) },
+        note: "Połączenie przerwało się przed odpowiedzią. AUTO było warunkowe i nie zostało potwierdzone, więc sprawa trafia do pracownika (reguła 7).",
+      };
     return { kind: "success", r, note: acc.pending ? "Połączenie przerwało się przed szkicem; decyzja reguł jest kompletna." : null };
+  }
 
   const reason = r?.blad_modelu ? `Model nie odpowiedział (${r.blad_modelu}).` : (acc.fail ?? "Nieznany błąd.");
 
