@@ -1,4 +1,5 @@
 import type { PipelineResult } from "../lib/pipeline";
+import { isConditionalAuto } from "../lib/rules";
 
 export type Phase = "classifying" | "drafting" | "done";
 
@@ -24,7 +25,9 @@ export function Stepper({ phase, r }: { phase: Phase; r: PipelineResult | null }
     {
       label: "Reguły wybierają tryb",
       state: r ? "done" : "pending",
-      detail: r ? `${r.decyzja.tryb}, reguła ${r.decyzja.regula.id}` : "7 reguł po kolei",
+      detail: r
+        ? `${r.decyzja.tryb}, reguła ${r.decyzja.regula.id}${isConditionalAuto(r.decyzja.tryb, phase === "drafting") ? " (warunkowo)" : ""}`
+        : "7 reguł po kolei",
     },
     {
       label: draftLabel,

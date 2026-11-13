@@ -198,3 +198,42 @@ odwiedzający się rozłączy, a budżety czasu (klasyfikacja 15 s × 2 próby, 
 **D-31. Szybkie testy w formularzu** (`lib/presets.ts`) to własne przykłady spoza zestawu testowego: manipulacja,
 cudze zamówienie, incydent bez słów kluczowych, groźba prawna, pytanie przed zakupem. Wstawiają treść do formularza,
 ale niczego nie uruchamiają same, więc nie generują kosztów bez kliknięcia.
+
+## H. Zmiany po przeglądzie kodu (11.2026)
+
+**D-32. Kontrola odpowiedzi AUTO: reguła 6 jest potwierdzana dopiero po napisaniu odpowiedzi.**
+*Problem:* decyzja zapadała przed powstaniem tekstu. Gdy szkic nie powstał (np. przekroczony czas 12 s), wynik miał
+`tryb: AUTO` bez odpowiedzi (`szkic: null`). Gdy model powołał się wyłącznie na źródło spoza listy, wynik miał AUTO
+z odpowiedzią bez żadnego źródła (`uzyte_zrodla: []`). W systemie, który wysyła AUTO bez akceptacji, oznaczałoby to brak
+odpowiedzi albo odpowiedź niepopartą zatwierdzonym źródłem.
+*Decyzja:* AUTO oznacza wysłanie odpowiedzi bez pracownika, więc reguła 6 jest spełniona dopiero wtedy, gdy kod przyjmie
+odpowiedź. Kontrola jest deterministyczna (`checkAutoAnswer` i `confirmAuto` w `lib/rules.ts`) i odrzuca odpowiedź, gdy:
+1. jej nie ma: błąd lub przekroczony czas modelu, wynik niezgodny ze schematem, pusty tekst;
+2. nie wskazuje żadnego źródła z listy podanej przez kod;
+3. powołuje się na jakiekolwiek źródło spoza listy, także obok poprawnego.
+
+Odrzucenie oznacza, że reguła 6 nie jest spełniona, więc decyduje reguła 7 (DRAFT); ślad decyzji podaje przy regule 6
+powód odrzucenia. Tekst, jeśli powstał, zostaje jako szkic do sprawdzenia przez pracownika (bez stopki AUTO); bez tekstu
+sprawa trafia do pracownika bez szkicu. Kontrola nie zmienia DRAFT ani ESKALACJI i może tylko obniżyć AUTO do DRAFT,
+czyli działa w bezpieczną stronę. Wersja reguł: 1.1. Przy okazji pusty tekst od modelu nie jest już pokazywany jako szkic
+w żadnym trybie (jest błędem szkicu).
+*Do akceptacji (pkt 3):* to wariant ostrzejszy niż minimum. Łagodniejszy wariant (odrzucać tylko odpowiedź bez żadnego
+poprawnego źródła) zostawiałby AUTO, w którym część faktów mogła pochodzić spoza zatwierdzonych źródeł.
+*Strumień w UI (D-30):* decyzja jest nadal wysyłana zaraz po klasyfikacji, bo DRAFT i ESKALACJA są wtedy ostateczne.
+AUTO jest pokazywane jako **warunkowe** (werdykt, drabinka reguł, pasek etapów, komunikat dla czytnika ekranu), a końcowy
+wynik je potwierdza albo zastępuje decyzją DRAFT z reguły 7. Wybrano aktualizację, a nie wstrzymanie decyzji, bo
+wstrzymanie opóźniłoby pokazanie trybu w sprawach AUTO o czas pisania odpowiedzi (do 12 s). Gdy połączenie przerwie się
+po wstępnym AUTO, przeglądarka stosuje tę samą regułę (`lib/settle.ts`): bez odpowiedzi AUTO nie zostaje, demo pokazuje
+DRAFT z reguły 7 i komunikat o przerwanym połączeniu.
+*Wpływ na opublikowane wyniki:* reguły 1–7 liczone z klasyfikacji się nie zmieniły (`tests/replay.test.ts`: 100/100
+decyzji jak w zapisie). Kontrola działa tylko tam, gdzie powstaje odpowiedź: w demo na żywo i w 16 przykładach ewaluacji
+(D-23). Pozostałe 84 przypadki ewaluacji nie mają szkicu, więc mierzą same reguły 1–7. Trzy zapisane przykłady AUTO
+(TC-001, TC-016, TC-091 w `public/snapshots.json`) przechodzą kontrolę, więc opublikowane liczby pozostają aktualne.
+Gdyby w przyszłym przebiegu odpowiedź któregoś z 16 przykładów nie przeszła kontroli, test replay wskaże ten wiersz,
+bo odtwarza tylko reguły 1–7. To sygnał do świadomej oceny, a nie błąd do wyciszenia.
+
+**D-33. Prompt szkicu 1.3: wskazówki trafiają także do odpowiedzi AUTO.** Zadanie dla trybu AUTO pomijało listę
+wskazówek, którą kod przygotowuje dla każdego zgłoszenia (`draftHints` w `lib/pipeline.ts`). W praktyce ginęła jedyna
+wskazówka możliwa przy AUTO: przy załączniku (status albo pytanie o produkt, D-09) odpowiedź miała potwierdzić, że plik
+przyjęto i oceni go pracownik, bo AI go nie analizowało. Teraz każdy tryb dostaje wskazówki (test `tests/prompts.test.ts`).
+Zapisane przykłady (`public/snapshots.json`) powstały z wcześniejszą wersją promptu i nie są nadpisywane (D-18, D-24).

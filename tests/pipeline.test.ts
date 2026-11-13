@@ -75,7 +75,7 @@ describe("pipeline", () => {
   });
 
   it("order number missed by the model is recovered from text by code", async () => {
-    const { adapter } = fake(k());
+    const { adapter } = fake(k(), { tekst: "Zamówienie jest w drodze.", uzyte_zrodla: ["zamowienie:ZAM-20588"] });
     const r = await processTicket(z({ nadawca: "marek.nowak@example.com", tresc: "Gdzie jest zam 20588?" }), adapter);
     expect(r.sprawdzenie_zamowienia.status).toBe("zgodne");
     expect(r.decyzja.tryb).toBe("AUTO");
@@ -84,13 +84,13 @@ describe("pipeline", () => {
   it("FAQ AUTO uses only the single matched article", async () => {
     const { adapter } = fake(
       k({ kategoria: "pytanie_o_produkt", dane: { nr_zamowienia: null, produkt: "KX-210", opis: "pranie", jezyk: "pl" } }),
-      { tekst: "Pierz ręcznie do 30°C.", uzyte_zrodla: ["faq-kx210-pielegnacja#1", "wymyslone#9"] },
+      { tekst: "Pierz ręcznie do 30°C.", uzyte_zrodla: ["faq-kx210-pielegnacja#1"] },
     );
     const r = await processTicket(z({ nadawca: "nowy.klient@example.org", tresc: "Czy KX-210 można prać w pralce?" }), adapter);
     expect(r.decyzja.tryb).toBe("AUTO");
     expect(r.zrodla.map((s) => s.id)).toEqual(["faq-kx210-pielegnacja#1"]);
     expect(r.szkic?.uzyte_zrodla).toEqual(["faq-kx210-pielegnacja#1"]);
-    expect(r.szkic?.odrzucone_zrodla).toEqual(["wymyslone#9"]);
+    expect(r.szkic?.odrzucone_zrodla).toEqual([]);
   });
 
   it("escalation: internal note from the model + fixed customer acknowledgement", async () => {
@@ -116,7 +116,7 @@ describe("pipeline", () => {
       classify: async () => call(k()),
       draft: async () => {
         order.push("draft");
-        return call({ tekst: "x", uzyte_zrodla: [] });
+        return call({ tekst: "x", uzyte_zrodla: ["zamowienie:ZAM-20417"] });
       },
     };
     let partial: Awaited<ReturnType<typeof processTicket>> | null = null;
@@ -148,5 +148,99 @@ describe("pipeline", () => {
     const r = await processTicket(z(), adapter);
     expect(r.koszt.tokeny_wejscie).toBe(200);
     expect(r.koszt.usd).toBeGreaterThan(0);
+  });
+});
+
+// D-32: AUTO means the answer goes out without a person, so it needs an answer that code accepts.
+describe("AUTO without a valid answer falls back to DRAFT (D-32)", () => {
+  const faqK = k({ kategoria: "pytanie_o_produkt", dane: { nr_zamowienia: null, produkt: "KX-210", opis: "pranie", jezyk: "pl" } });
+  const faqZ = z({ nadawca: "nowy.klient@example.org", tresc: "Czy KX-210 można prać w pralce?" });
+  const rule = (r: Awaited<ReturnType<typeof processTicket>>, id: number) => r.decyzja.slad.find((s) => s.id === id);
+
+  function failingDraft(error: string) {
+    const adapter: LlmAdapter = { classify: async () => call(k()), draft: async () => call(null, error) };
+    return adapter;
+  }
+
+  it("draft timeout on an AUTO case → DRAFT by rule 7, no answer, reason in the trace", async () => {
+    const r = await processTicket(z(), failingDraft("przekroczony czas odpowiedzi modelu"));
+    expect(r.decyzja.tryb).toBe("DRAFT");
+    expect(r.decyzja.regula.id).toBe(7);
+    expect(r.szkic).toBeNull();
+    expect(r.blad_szkicu).toBe("przekroczony czas odpowiedzi modelu");
+    expect(rule(r, 6)?.spelniona).toBe(false);
+    expect(rule(r, 7)?.spelniona).toBe(true);
+    expect(r.decyzja.uzasadnienie).toContain("przekroczony czas odpowiedzi modelu");
+    expect(r.uwagi.join(" ")).toMatch(/bez szkicu/);
+  });
+
+  it("answer citing only an invented source → DRAFT; the text is kept as a draft, without the AUTO footer", async () => {
+    const { adapter } = fake(faqK, { tekst: "Można prać w 90°C.", uzyte_zrodla: ["wymyslone#9"] });
+    const r = await processTicket(faqZ, adapter);
+    expect(r.decyzja.tryb).toBe("DRAFT");
+    expect(r.decyzja.regula.id).toBe(7);
+    expect(r.szkic?.rodzaj).toBe("szkic_do_akceptacji");
+    expect(r.szkic?.tekst).toBe("Można prać w 90°C.");
+    expect(r.szkic?.uzyte_zrodla).toEqual([]);
+    expect(r.szkic?.odrzucone_zrodla).toEqual(["wymyslone#9"]);
+    expect(r.decyzja.uzasadnienie).toContain("wymyslone#9");
+  });
+
+  it("answer citing an invented source next to a real one → DRAFT (facts may come from outside the list)", async () => {
+    const { adapter } = fake(faqK, { tekst: "Pierz ręcznie do 30°C.", uzyte_zrodla: ["faq-kx210-pielegnacja#1", "wymyslone#9"] });
+    const r = await processTicket(faqZ, adapter);
+    expect(r.decyzja.tryb).toBe("DRAFT");
+    expect(r.szkic?.uzyte_zrodla).toEqual(["faq-kx210-pielegnacja#1"]);
+    expect(r.szkic?.odrzucone_zrodla).toEqual(["wymyslone#9"]);
+  });
+
+  it("answer that cites no source → DRAFT", async () => {
+    const { adapter } = fake(k(), { tekst: "Paczka jest w drodze.", uzyte_zrodla: [] });
+    const r = await processTicket(z(), adapter);
+    expect(r.decyzja.tryb).toBe("DRAFT");
+    expect(r.decyzja.uzasadnienie).toMatch(/żadnego źródła/);
+  });
+
+  it("empty answer text → DRAFT, and an empty text is not shown as a draft", async () => {
+    const { adapter } = fake(k(), { tekst: "   ", uzyte_zrodla: ["zamowienie:ZAM-20417"] });
+    const r = await processTicket(z(), adapter);
+    expect(r.decyzja.tryb).toBe("DRAFT");
+    expect(r.szkic).toBeNull();
+    expect(r.blad_szkicu).toMatch(/pust/);
+  });
+
+  it("decision update: the early event shows conditional AUTO, the final result carries DRAFT", async () => {
+    let partial: Awaited<ReturnType<typeof processTicket>> | null = null;
+    let pending: boolean | null = null;
+    const final = await processTicket(z(), failingDraft("timeout"), {
+      withDraft: true,
+      onDecision: (p, d) => {
+        partial = p;
+        pending = d;
+      },
+    });
+    expect(pending).toBe(true);
+    expect(partial!.decyzja.tryb).toBe("AUTO");
+    expect(final.decyzja.tryb).toBe("DRAFT");
+    // The early snapshot is not mutated by what happens after it was sent.
+    expect(partial!.uwagi).toEqual([]);
+    expect(partial!.decyzja.slad.some((s) => s.id === 7)).toBe(false);
+  });
+
+  it("without a requested answer (evaluation run) the AUTO decision is not checked", async () => {
+    const { adapter, prompts } = fake(k());
+    const r = await processTicket(z(), adapter, { withDraft: false });
+    expect(r.decyzja.tryb).toBe("AUTO");
+    expect(prompts).toHaveLength(0);
+  });
+
+  it("DRAFT and ESKALACJA are never changed by a failed draft", async () => {
+    const adapter: LlmAdapter = {
+      classify: async () => call(k({ kategoria: "reklamacja", flagi: ["mozliwy_incydent"] })),
+      draft: async () => call(null, "timeout"),
+    };
+    const r = await processTicket(z({ tresc: "Zawias pękł, upadłam." }), adapter);
+    expect(r.decyzja.tryb).toBe("ESKALACJA");
+    expect(r.decyzja.regula.id).toBe(1);
   });
 });

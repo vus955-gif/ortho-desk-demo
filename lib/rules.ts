@@ -2,7 +2,8 @@
 // this pure function chooses the mode. First matching rule wins; risk rules come first.
 import type { Decyzja, EngineInput, Kategoria, RuleTrace, Tryb } from "./types";
 
-export const WERSJA_REGUL = "1.0";
+// 1.1: rule 6 also requires the AUTO answer to pass the code check after the draft (D-32).
+export const WERSJA_REGUL = "1.1";
 /** Start value from the spec; a parameter, not a calibrated probability. */
 export const PROG_PEWNOSCI = 0.85;
 /** Categories whose resolution depends on inspecting an attachment (photo of a defect, document). */
@@ -14,7 +15,13 @@ export const REGULY: { id: number; nazwa: string; tryb: Tryb; warunek: string }[
   { id: 3, nazwa: "Błąd modelu lub ocena załącznika", tryb: "DRAFT", warunek: "Błąd modelu/schematu albo rozstrzygnięcie wymaga oceny załącznika." },
   { id: 4, nazwa: "Podejrzenie manipulacji", tryb: "DRAFT", warunek: "Flaga podejrzenie_manipulacji (instrukcje dla systemu w treści)." },
   { id: 5, nazwa: "Niska pewność lub wiele wątków", tryb: "DRAFT", warunek: `Pewność poniżej ${String(PROG_PEWNOSCI).replace(".", ",")} lub flaga wiele_watkow.` },
-  { id: 6, nazwa: "AUTO: status lub FAQ z jednoznacznego źródła", tryb: "AUTO", warunek: "Status: zamówienie przypisane do klienta testowego. FAQ: jednoznaczne, zatwierdzone źródło." },
+  {
+    id: 6,
+    nazwa: "AUTO: status lub FAQ z jednoznacznego źródła",
+    tryb: "AUTO",
+    warunek:
+      "Status: zamówienie przypisane do klienta testowego. FAQ: jednoznaczne, zatwierdzone źródło. Na końcu kod sprawdza odpowiedź modelu: musi mieć treść i opierać się tylko na źródłach z listy; inaczej reguła 7.",
+  },
   { id: 7, nazwa: "Pozostałe przypadki", tryb: "DRAFT", warunek: "Żadna wcześniejsza reguła nie zadziałała." },
 ];
 
@@ -132,3 +139,44 @@ export function decide(input: EngineInput, prog: number = PROG_PEWNOSCI): Decyzj
       : `Kategoria ${kk.kategoria} nie ma ścieżki AUTO, więc szkic do akceptacji pracownika.`;
   return step(7, true, r7why)!;
 }
+
+// ---------- AUTO answer check (D-32) ----------
+// AUTO means the answer goes out without a person. Rule 6 is therefore confirmed only once the answer
+// exists and code accepts it; without such an answer the table falls through to rule 7 (DRAFT).
+
+/** The model's answer after code has split the cited ids into provided and not provided. */
+export interface AutoAnswer {
+  tekst: string;
+  uzyte_zrodla: string[]; // cited ids that code provided
+  odrzucone_zrodla: string[]; // cited ids that code did not provide
+}
+
+export interface AnswerCheck {
+  ok: boolean;
+  dlaczego: string;
+}
+
+/** Pure check of an AUTO answer: present, non-empty, grounded only in provided sources. */
+export function checkAutoAnswer(a: AutoAnswer | null, blad: string | null): AnswerCheck {
+  if (!a) return { ok: false, dlaczego: `brak odpowiedzi modelu (${blad ?? "nie powstała"})` };
+  if (!a.tekst.trim()) return { ok: false, dlaczego: "odpowiedź modelu jest pusta" };
+  if (a.odrzucone_zrodla.length > 0)
+    return { ok: false, dlaczego: `odpowiedź powołuje się na źródła spoza listy (${a.odrzucone_zrodla.join(", ")})` };
+  if (a.uzyte_zrodla.length === 0) return { ok: false, dlaczego: "odpowiedź nie wskazuje żadnego źródła z listy" };
+  return { ok: true, dlaczego: `odpowiedź opiera się na źródłach z listy (${a.uzyte_zrodla.join(", ")})` };
+}
+
+/** Re-evaluates rule 6 with the answer check. Only AUTO can change, and only to DRAFT (rule 7). Pure. */
+export function confirmAuto(d: Decyzja, check: AnswerCheck): Decyzja {
+  if (d.tryb !== "AUTO" || check.ok) return d;
+  const r7 = REGULY[6];
+  const dlaczego = `Reguła 6 dopuszczała AUTO, ale kod odrzucił odpowiedź modelu: ${check.dlaczego}. Bez poprawnej odpowiedzi nie ma czego wysłać automatycznie, więc sprawa trafia do pracownika.`;
+  const slad: RuleTrace[] = d.slad.map((s) =>
+    s.id === 6 ? { ...s, spelniona: false, dlaczego: `${s.dlaczego} Odpowiedź nie przeszła kontroli kodu: ${check.dlaczego}.` } : s,
+  );
+  slad.push({ id: 7, nazwa: r7.nazwa, tryb: r7.tryb, spelniona: true, dlaczego });
+  return { ...d, tryb: r7.tryb, regula: { id: 7, nazwa: r7.nazwa }, uzasadnienie: dlaczego, slad };
+}
+
+/** AUTO shown while the answer is still being written is conditional; DRAFT and ESKALACJA are final. */
+export const isConditionalAuto = (tryb: Tryb, draftPending: boolean): boolean => draftPending && tryb === "AUTO";

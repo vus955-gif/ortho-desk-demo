@@ -5,7 +5,7 @@ import { costUsd, MODEL_CONFIG, type LlmAdapter } from "./llm";
 import { checkOrder, findOrderNumberInText, normalizeOrderNumber, ordersOf } from "./orders";
 import { PROMPT_KLASYFIKACJI_WERSJA, PROMPT_SZKICU_WERSJA, userSzkic, type DraftSource } from "./prompts";
 import { checkFaqSource, chunksOfArticle, search } from "./retrieval";
-import { decide } from "./rules";
+import { checkAutoAnswer, confirmAuto, decide, type AutoAnswer } from "./rules";
 import { validateKlasyfikacja } from "./schema";
 import { POTWIERDZENIE_ESKALACJI, STOPKA_AUTO } from "./templates";
 import type { Decyzja, Jezyk, Klasyfikacja, OrderCheck, SourceCheck, Tryb, Zamowienie, Zgloszenie } from "./types";
@@ -127,7 +127,10 @@ export async function processTicket(
   llm: LlmAdapter,
   opts: {
     withDraft: boolean;
-    /** Called once the rule decision is final, before the draft is requested. */
+    /**
+     * Called once rules 1–7 have decided, before the draft is requested. DRAFT and ESKALACJA are final
+     * here; AUTO is conditional on the answer check (D-32), so the final result may carry DRAFT instead.
+     */
     onDecision?: (partial: PipelineResult, draftPending: boolean) => void;
     /** Aborts model calls, e.g. when the visitor disconnects. */
     signal?: AbortSignal;
@@ -158,8 +161,8 @@ export async function processTicket(
   const senderOrders = orderCheck.klient ? ordersOf(orderCheck.klient.id) : [];
   const sourceCheck = checkFaqSource([klasyfikacja?.dane.produkt, z.temat, z.tresc], senderOrders);
 
-  // 3) deterministic rules choose the mode
-  const decyzja = decide({ klasyfikacja, bladModelu, zalacznik: z.zalacznik, orderCheck, sourceCheck });
+  // 3) deterministic rules choose the mode (AUTO is confirmed only after the answer check in step 5)
+  let decyzja = decide({ klasyfikacja, bladModelu, zalacznik: z.zalacznik, orderCheck, sourceCheck });
 
   if (z.zalacznik) uwagi.push(`Załącznik „${z.zalacznik}" zapisany przy sprawie; nie został przeanalizowany przez AI.`);
   if (orderCheck.status === "inny_klient") uwagi.push("Numer zamówienia należy do innego klienta: dane zamówienia nie są ujawniane.");
@@ -187,7 +190,7 @@ export async function processTicket(
       szkic,
       blad_szkicu: bladSzkicu,
       zrodla: sources.map((s) => ({ ...s, score: scores.get(s.id) ?? null, uzyte: used.has(s.id) })),
-      uwagi,
+      uwagi: [...uwagi], // a copy: the early result must not change after it was handed out
       model: {
         id: c.model,
         prompt_klasyfikacji: PROMPT_KLASYFIKACJI_WERSJA,
@@ -200,10 +203,11 @@ export async function processTicket(
     };
   };
 
-  // The decision is final before any draft exists: callers can show it right away.
+  // Callers can show the decision right away. DRAFT and ESKALACJA are final here; AUTO waits for step 5.
   const willDraft = opts.withDraft && klasyfikacja !== null && !opts.signal?.aborted;
   opts.onDecision?.(build(), willDraft);
 
+  let odpowiedz: AutoAnswer | null = null;
   if (willDraft && klasyfikacja) {
     const prompt = userSzkic({
       z,
@@ -222,20 +226,43 @@ export async function processTicket(
     const raw = r.raw as { tekst?: unknown; uzyte_zrodla?: unknown } | null;
     if (r.error || !raw || typeof raw.tekst !== "string" || !Array.isArray(raw.uzyte_zrodla)) {
       bladSzkicu = r.error ?? "szkic niezgodny ze schematem";
+    } else if (!raw.tekst.trim()) {
+      bladSzkicu = "model zwrócił pusty tekst";
     } else {
       const provided = new Set(sources.map((s) => s.id));
       const cited = raw.uzyte_zrodla.filter((x): x is string => typeof x === "string");
-      const rodzaj = ({ AUTO: "odpowiedz_auto", DRAFT: "szkic_do_akceptacji", ESKALACJA: "notatka_eskalacji" } as const)[decyzja.tryb as Tryb];
-      szkic = {
-        rodzaj,
-        tekst: decyzja.tryb === "AUTO" ? `${raw.tekst.trim()}\n\n— ${STOPKA_AUTO[jezyk]}` : raw.tekst.trim(),
-        potwierdzenie_dla_klienta: decyzja.tryb === "ESKALACJA" ? POTWIERDZENIE_ESKALACJI[jezyk] : null,
+      odpowiedz = {
+        tekst: raw.tekst.trim(),
         uzyte_zrodla: cited.filter((x) => provided.has(x)),
         odrzucone_zrodla: cited.filter((x) => !provided.has(x)),
       };
     }
   } else if (opts.withDraft && !klasyfikacja) {
     bladSzkicu = "Model niedostępny lub wynik odrzucony: sprawa trafia do kolejki ręcznej bez szkicu.";
+  }
+
+  // 5) AUTO needs an answer that code accepts (D-32); otherwise rule 6 does not hold and rule 7 gives DRAFT.
+  // Only when an answer was requested: an evaluation run without drafts measures rules 1–7 alone.
+  if (opts.withDraft && decyzja.tryb === "AUTO") {
+    const kontrola = checkAutoAnswer(odpowiedz, bladSzkicu);
+    decyzja = confirmAuto(decyzja, kontrola);
+    if (!kontrola.ok)
+      uwagi.push(
+        odpowiedz
+          ? `Kod odrzucił odpowiedź AUTO: ${kontrola.dlaczego}. Tryb zmieniony na DRAFT, a tekst modelu jest tylko szkicem do sprawdzenia przez pracownika.`
+          : `Kod odrzucił odpowiedź AUTO: ${kontrola.dlaczego}. Tryb zmieniony na DRAFT, sprawa trafia do pracownika bez szkicu.`,
+      );
+  }
+
+  if (odpowiedz) {
+    const tryb: Tryb = decyzja.tryb;
+    szkic = {
+      rodzaj: ({ AUTO: "odpowiedz_auto", DRAFT: "szkic_do_akceptacji", ESKALACJA: "notatka_eskalacji" } as const)[tryb],
+      tekst: tryb === "AUTO" ? `${odpowiedz.tekst}\n\n— ${STOPKA_AUTO[jezyk]}` : odpowiedz.tekst,
+      potwierdzenie_dla_klienta: tryb === "ESKALACJA" ? POTWIERDZENIE_ESKALACJI[jezyk] : null,
+      uzyte_zrodla: odpowiedz.uzyte_zrodla,
+      odrzucone_zrodla: odpowiedz.odrzucone_zrodla,
+    };
   }
 
   return build();
